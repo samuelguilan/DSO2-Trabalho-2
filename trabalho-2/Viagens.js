@@ -8,10 +8,11 @@ export default class ViagensScreen extends React.Component {
 
   constructor(props){
     super(props);
-    let infoOrgao = props.navigation.getParam('informacoes');
+    let infoOrgao = props.navigation.state;
     let paginasSomadas = [];
+    console.log(infoOrgao)
     this.state = {
-      codigo:infoOrgao.codigo,
+      codigo:  infoOrgao.codigo,
       dataMin: infoOrgao.dataMin,
       dataMax: infoOrgao.dataMax,
       pagina: 1,
@@ -22,7 +23,7 @@ export default class ViagensScreen extends React.Component {
   componentDidMount(){
     const { navigation } = this.props;
     this.focusListener = navigation.addListener('didFocus', () => {
-     
+     this.buscaViagens()
     });
   }
 
@@ -30,18 +31,22 @@ export default class ViagensScreen extends React.Component {
   componentWillUnmount() {
     this.focusListener.remove();
   } 
-  buscaViagens(){
-      var codigoUrl = encodeURI(this.state.codigo);
-      var dataMinUrl = encodeURI(this.state.dataMin);
-      var dataMaxUrl = encodeURI(this.state.dataMax);
-      var paginaUrl = encodeURI(this.state.pagina);
-      var uri = "http://www.transparencia.gov.br/api-de-dados/viagens?" +
+  buscaViagens = () => {
+    console.log(this.state.dataMin)
+      var codigoUrl = this.state.codigo;
+      var dataMinUrl = this.state.dataMin;
+      var dataMaxUrl = this.state.dataMax;
+      var paginaUrl = this.state.pagina;
+      var uri = `http://www.transparencia.gov.br/api-de-dados/viagens?dataIdaDe=${dataMinUrl}&dataIdaAte=${dataMaxUrl}&dataRetornoDe=${dataMinUrl}&dataRetornoAte=${dataMaxUrl}&codigoOrgaoSelecionado=${codigoUrl}&pagina=${paginaUrl}`;
+      
+      var uri2 = "http://www.transparencia.gov.br/api-de-dados/viagens?" +
                "dataIdaDe="+dataMinUrl+
                "&dataIdaAte="+dataMaxUrl+
                "&dataRetornoDe="+dataMinUrl+
                "&dataRetornoAte="+dataMaxUrl+
                "&codigoOrgaoSelecionado="+codigoUrl+
                 "&pagina="+paginaUrl;
+      console.log(uri)
       return fetch(uri)
         .then((response) => response.json())
         .then((responseJson) => {
@@ -58,7 +63,7 @@ export default class ViagensScreen extends React.Component {
 
   }
   somaTotalGastos(viagens) {
-    if(!this.paginasSomadas.contains(this.state.pagina)){
+    if(!this.paginasSomadas.includes(this.state.pagina)){
         this.paginasSomadas.push(this.state.pagina);
         var totalGastos = this.state.somaTotalGastos;
         viagens.forEach((viagem)=>{totalGastos = totalGastos + this.state.valorTotalViagem;});
@@ -66,9 +71,33 @@ export default class ViagensScreen extends React.Component {
       }
   }
 
-  paginaAnterior(){}
+  paginaAnterior(){
 
-  proximaPagina(){}
+    if( this.state.pagina >= 1) {
+    this.setState({
+      page: this.state.pagina - 1
+    }, () => {
+      this.buscaViagens()
+    })
+    } else {
+      console.log('erro')
+    }
+
+  }
+
+  proximaPagina(){
+
+    if( this.state.pagina >= 1) {
+    this.setState({
+      page: this.state.pagina + 1
+    }, () => {
+      this.buscaViagens()
+    })
+    } else {
+      console.log('erro')
+    }
+
+  }
 
   render() {
     
@@ -93,14 +122,17 @@ export default class ViagensScreen extends React.Component {
         title="Próxima página"
         onPress={() => this.proximaPagina}
       />
-      <Button
-        title="Página anterior"
-        onPress={() => this.paginaAnterior}
-      />
+      {this.state.pagina === 1 && this.state.isLoading === false ? <Text></Text> : <Button 
+          title="Página Anterior"
+          onPress={() => {
+            this.paginaAnterior()
+          }}
+          />}
       <Button
         title="Voltar"
         onPress={() => navigate('Orgaos')}
       />
+      
       </View>
     );
    }
