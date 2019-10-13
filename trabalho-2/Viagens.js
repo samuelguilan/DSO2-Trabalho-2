@@ -9,11 +9,13 @@ export default class ViagensScreen extends React.Component {
   constructor(props){
     super(props);
     let infoOrgao = props.navigation.getParam('informacoes');
+    let paginasSomadas = [];
     this.state = {
       codigo:infoOrgao.codigo,
       dataMin: infoOrgao.dataMin,
       dataMax: infoOrgao.dataMax,
       pagina: 1,
+      somaTotalGastos: 0,
     };
   }
   
@@ -43,8 +45,10 @@ export default class ViagensScreen extends React.Component {
       return fetch(uri)
         .then((response) => response.json())
         .then((responseJson) => {
+          const v = responseJson;
+          this.somaTotalGastos(v);
           this.setState({
-            viagens: responseJson,
+            viagens: v,
           }, function(){
           });
         })
@@ -53,11 +57,13 @@ export default class ViagensScreen extends React.Component {
         });
 
   }
-  somaTotalGastos() {
-    this.viagens.forEach((viagem)=>{console.log.viagem.valorTotalViagem;});
-      
-    
-
+  somaTotalGastos(viagens) {
+    if(!this.paginasSomadas.contains(this.state.pagina)){
+        this.paginasSomadas.push(this.state.pagina);
+        var totalGastos = this.state.somaTotalGastos;
+        viagens.forEach((viagem)=>{totalGastos = totalGastos + this.state.valorTotalViagem;});
+        this.setState({somaTotalGastos: totalGastos});
+      }
   }
 
   paginaAnterior(){}
@@ -69,7 +75,7 @@ export default class ViagensScreen extends React.Component {
     const {navigate} = this.props.navigation;
     return (
       <View>
-      <Text>Total de gastos: </Text>
+      <Text>Total de gastos: this.state.somaTotalGastos</Text>
        <FlatList
           data={this.state.viagens}
           renderItem={({ item }) => (
@@ -91,6 +97,10 @@ export default class ViagensScreen extends React.Component {
         title="Página anterior"
         onPress={() => this.paginaAnterior}
       />
+      <Button
+        title="Voltar"
+        onPress={() => navigate('Orgaos')}
+      />
       </View>
     );
    }
@@ -101,4 +111,4 @@ export default class ViagensScreen extends React.Component {
       fontSize: 18,
       height: 44,
     },
-  });
+});

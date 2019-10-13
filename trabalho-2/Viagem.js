@@ -8,23 +8,14 @@ export default class ViagemScreen extends React.Component {
 
   constructor(props){
     super(props);
-    this.state = { isLoading: true }
+    let viagem = props.navigation.getParam('viagem');
+    this.state = { viagem:viagem }
   }
   
   componentDidMount(){
     const { navigation } = this.props;
     this.focusListener = navigation.addListener('didFocus', () => {
-      return fetch('http://www.transparencia.gov.br/api-de-dados/orgaos-siafi?pagina=1')
-        .then((response) => response.json())
-        .then((responseJson) => {
-          this.setState({
-            isLoading: false,
-          }, function(){
-          });
-        })
-        .catch((error) =>{
-          console.error(error);
-        });
+      console.log(this.state.viagem);
     });
   }
 
@@ -40,32 +31,28 @@ export default class ViagemScreen extends React.Component {
     const {navigate} = this.props.navigation;
     return (
       <View>
-      <Text>Data de ida: </Text>
-      <Text>Data de volta: </Text>
+      <Text>Data de ida: this.state.viagem.dataInicioAfastamento</Text>
+      <Text>Data de volta: this.state.viagem.dataFimAfastamento</Text>
       <Text> </Text>
-      <Text>Nome do servidor: </Text>
+      <Text>Nome do servidor: this.state.viagem.pessoa.nome</Text>
       <Text> </Text>
-      <Text>Motivo da viagem: </Text>
+      <Text>Motivo da viagem: this.state.viagem.dimViagem.motivo</Text>
       <Text> </Text>
       <Text>Valores: </Text>
-      <Text>        Restituição: </Text>
-      <Text>        Taxa de agenciamento: </Text>
-      <Text>        Multa: </Text>
-      <Text>        Diárias: </Text>
-      <Text>        Passagem: </Text>
-      <Text>Total de valores: </Text>
-      <Text>Total de devolução: </Text>
+      <Text>        Restituição: this.state.viagem.valorTotalRestituicao</Text>
+      <Text>        Taxa de agenciamento: this.state.viagem.valorTotalTaxaAgenciamento</Text>
+      <Text>        Multa: this.state.viagem.valorMulta</Text>
+      <Text>        Diárias: this.state.viagem.valorTotalDiarias</Text>
+      <Text>        Passagem: this.state.viagem.valorTotalPassagem</Text>
+      <Text>Total de valores: this.state.viagem.valorTotalViagem</Text>
+      <Text>Total de devolução: this.state.viagem.valorTotalDevolucao</Text>
       
       <Button
         title="Voltar"
-        onPress={() => navigate('Orgao')}
+        onPress={() => navigate('Viagens')}
       />
       </View>
     );
 
   }
 }
-const styles = StyleSheet.create({
-  
-  
-})
