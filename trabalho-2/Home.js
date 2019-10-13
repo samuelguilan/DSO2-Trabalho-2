@@ -1,6 +1,5 @@
 import * as React from 'react';
 import {
-  ActivityIndicator,
   Text,
   TextInput,
   TouchableOpacity,
@@ -62,10 +61,8 @@ export default class HomeScreen extends React.Component {
   }
 
   buscaOrgaos = () => {
-    if(this.state.descricao!= null){
-      this.buscaPorOrgao;
-    }else{
-      const { orgaos, page } = this.state
+    
+    const { orgaos, page } = this.state
     this.setState({ isLoading: true})
     return fetch(
         `http://www.transparencia.gov.br/api-de-dados/orgaos-siafi?pagina=${page}`
@@ -83,7 +80,7 @@ export default class HomeScreen extends React.Component {
     }
     
 
-  }
+  
 
 
 
@@ -91,7 +88,11 @@ export default class HomeScreen extends React.Component {
     this.setState({
       page: this.state.page + 1
     }, () => {
-      this.buscaOrgaos()
+      if(this.state.descricao== null){
+        this.buscaOrgaos()
+      }else{
+        this.buscaPorOrgao()
+      }
     })
   }
 
@@ -100,7 +101,11 @@ export default class HomeScreen extends React.Component {
     this.setState({
       page: this.state.page - 1
     }, () => {
-      this.buscaOrgaos()
+      if(this.state.descricao== null){
+        this.buscaOrgaos()
+      }else{
+        this.buscaPorOrgao()
+      }
     })
     } else {
       console.log('erro')
@@ -121,8 +126,12 @@ export default class HomeScreen extends React.Component {
         <Button
           title="Buscar"
           onPress={() =>  {
-            this.setState({page: 1})
-            this.buscaPorOrgao()
+            this.setState({
+              page: 1,
+              isLoading: true
+              },
+              ()=>this.buscaPorOrgao())
+            
           }}
         />
         <FlatList
