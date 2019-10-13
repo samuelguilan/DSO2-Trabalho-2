@@ -10,7 +10,7 @@ import {
   FlatList,
   ScrollView,
 } from 'react-native';
-import MainServices from './services/MainServices'
+//import MainServices from './services/MainServices'
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
@@ -22,16 +22,17 @@ export default class HomeScreen extends React.Component {
     this.state = { 
       isLoading: true,
       page: 1,
-      orgaos: []
+      orgaos: [],
+      descricao: null
     };
   }
 
   componentDidMount() {
-    // const { navigation } = this.props;
+    const { navigation } = this.props;
 
-    // this.focusListener = navigation.addListener('didFocus', () => {
+    this.focusListener = navigation.addListener('didFocus', () => {
       this.buscaOrgaos();
-    // });
+     });
   }
 
   componentWillUnmount() {
@@ -39,28 +40,38 @@ export default class HomeScreen extends React.Component {
   }
 
   buscaPorOrgao() {
-    var descricaoUrl = encodeURI(this.state.descricao);
-    var paginaUrl = encodeURI(1);
+    var d = this.state.descricao;
+    var p = this.state.page;
+    var descricaoUrl= encodeURI(d);
+    var paginaUrl = encodeURI(p);
     var uri =
       'http://www.transparencia.gov.br/api-de-dados/orgaos-siafi' +
-      '?descricao=' +
-      descricaoUrl +
-      '&pagina=' +
-      paginaUrl;
+      '?descricao=' + descricaoUrl +
+      '&pagina=' + paginaUrl; 
     fetch(uri)
       .then(response => response.json())
-      .then(responseJson => {});
+      .then(responseJson => {
+        this.setState({
+              isLoading: false,
+              orgaos: responseJson,
+            }, () => {});
+      })
+      .catch(error => {
+          console.error(error);
+        });  
   }
 
   buscaOrgaos = () => {
-    const { orgaos, page } = this.state
+    if(this.state.descricao!= null){
+      this.buscaPorOrgao;
+    }else{
+      const { orgaos, page } = this.state
     this.setState({ isLoading: true})
     return fetch(
         `http://www.transparencia.gov.br/api-de-dados/orgaos-siafi?pagina=${page}`
       )
         .then(res => res.json())
         .then(resJson => {
-          console.log(resJson);
           this.setState({
               isLoading: false,
               orgaos: resJson,
@@ -69,6 +80,8 @@ export default class HomeScreen extends React.Component {
         .catch(error => {
           console.error(error);
         });
+    }
+    
 
   }
 
@@ -107,11 +120,9 @@ export default class HomeScreen extends React.Component {
         {this.state.isLoading ? <Text> Carregando... </Text> : <Text>  </Text>}
         <Button
           title="Buscar"
-          onPress={() => {
-            this.setState({
-              isLoading: true,
-            });
-            this.buscaPorOrgao;
+          onPress={() =>  {
+            this.setState({page: 1})
+            this.buscaPorOrgao()
           }}
         />
         <FlatList

@@ -31,21 +31,21 @@ export default class ViagemScreen extends React.Component {
     const {navigate} = this.props.navigation;
     return (
       <View>
-      <Text>Data de ida: this.state.viagem.dataInicioAfastamento</Text>
-      <Text>Data de volta: this.state.viagem.dataFimAfastamento</Text>
+      <Text>Data de ida: {this.state.viagem.dataInicioAfastamento}</Text>
+      <Text>Data de volta: {this.state.viagem.dataFimAfastamento}</Text>
       <Text> </Text>
-      <Text>Nome do servidor: this.state.viagem.pessoa.nome</Text>
+      <Text>Nome do servidor: {this.state.viagem.pessoa.nome}</Text>
       <Text> </Text>
-      <Text>Motivo da viagem: this.state.viagem.dimViagem.motivo</Text>
+      <Text>Motivo da viagem: {this.state.viagem.dimViagem.motivo}</Text>
       <Text> </Text>
       <Text>Valores: </Text>
-      <Text>        Restituição: this.state.viagem.valorTotalRestituicao</Text>
-      <Text>        Taxa de agenciamento: this.state.viagem.valorTotalTaxaAgenciamento</Text>
-      <Text>        Multa: this.state.viagem.valorMulta</Text>
-      <Text>        Diárias: this.state.viagem.valorTotalDiarias</Text>
-      <Text>        Passagem: this.state.viagem.valorTotalPassagem</Text>
-      <Text>Total de valores: this.state.viagem.valorTotalViagem</Text>
-      <Text>Total de devolução: this.state.viagem.valorTotalDevolucao</Text>
+      <Text>        Restituição: {this.state.viagem.valorTotalRestituicao}</Text>
+      <Text>        Taxa de agenciamento: {this.state.viagem.valorTotalTaxaAgenciamento}</Text>
+      <Text>        Multa: {this.state.viagem.valorMulta}</Text>
+      <Text>        Diárias: {this.state.viagem.valorTotalDiarias}</Text>
+      <Text>        Passagem: {this.state.viagem.valorTotalPassagem}</Text>
+      <Text>Total de valores: {this.state.viagem.valorTotalViagem}</Text>
+      <Text>Total de devolução: {this.state.viagem.valorTotalDevolucao}</Text>
       
       <Button
         title="Voltar"
