@@ -14,7 +14,8 @@ export default class OrgaoScreen extends React.Component {
       isLoading: true,
       orgao: null,
       de: null,
-      ate: null }
+      ate: null,
+      codigo: '01000' }
   }
   
   componentDidMount(){
@@ -45,30 +46,33 @@ export default class OrgaoScreen extends React.Component {
 
 
 enviaDadosViagem = () => {
+  const {navigate} = this.props.navigation;
+
   let de = this.state.de
   let ate = this.state.ate
 
-  const success = this.handleData(this.state.de, this.state.ate)
+  let success = this.handleData(de, ate)
 
     if(success) {
       this.setState({
           de: de,
-          ate: ate
+          ate: ate,
         })
-      this.Alert.alert('sucesso')
+      console.log('sucesso')
+      navigate('Viagens', {dataMin: this.state.de, dataMax: this.state.ate, codigo: this.state.codigo})
     }
     else {
-      this.Alert.alert('tente novamente')
+      console.log('tente novamente')
     }
 }
 
 handleData = (de, ate) => {
 
-    const d1 = Date.parse(de)
-    const d2 = Date.parse(ate)
+    const d1 = new Date(de)
+    const d2 = new Date(ate)
     let success = false;
 
-    var differenceInTime = d2.getTime() - d1.getTime();
+    var differenceInTime = ate.getTime() - de.getTime();
     var differenceInDays = differenceInTime / 1000 * 3600 * 24
     
     if(differenceInDays < 0) 
@@ -126,6 +130,7 @@ handleData = (de, ate) => {
       <DatePicker 
           format= "DD-MM-YYYY"
           confirmBtnText="Escolher"
+          mode="date"
           cancelBtnText="Cancelar"
           date={this.state.de}
           onDateChange={(date) => {this.setState({de: date})}}
@@ -141,8 +146,8 @@ handleData = (de, ate) => {
       <Text> </Text>
       <Button
           title="Pesquisar"
-          onPress={() => navigate('Viagens', {})}
-          // onPress={() => this.enviaDadosViagem}
+          // onPress={() => navigate('Viagens', {dataMin: this.state.de, dataMax: this.state.ate, codigo: this.state.codigo})}
+          onPress={() => this.enviaDadosViagem()}
         />
       </View>
     );
