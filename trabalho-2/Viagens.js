@@ -9,12 +9,12 @@ export default class ViagensScreen extends React.Component {
   constructor(props){
     super(props);
     let infoOrgao = props.navigation.state;
-    let paginasSomadas = [];
     console.log(infoOrgao)
+    let paginasSomadas = [];
     this.state = {
-      codigo:  infoOrgao.codigo,
-      dataMin: infoOrgao.dataMin,
-      dataMax: infoOrgao.dataMax,
+      codigo:  infoOrgao.params.codigo,
+      dataMin: infoOrgao.params.dataMin,
+      dataMax: infoOrgao.params.dataMax,
       pagina: 1,
       somaTotalGastos: 0,
     };
@@ -32,20 +32,22 @@ export default class ViagensScreen extends React.Component {
     this.focusListener.remove();
   } 
   buscaViagens = () => {
-    console.log(this.state.dataMin)
-      let codigoUrl = this.state.codigo;
-      let dataMinUrl = this.state.dataMin;
-      let dataMaxUrl = this.state.dataMax;
-      let paginaUrl = this.state.pagina;
+      let codigo = this.state.codigo;
+      let dataMin = this.state.dataMin;
+      let dataMax = this.state.dataMax;
+      let pagina = this.state.pagina
+
+
+      let codigoUrl = encodeURI(codigo);
+      let dataMinUrl = encodeURI(this.converterData(dataMin));
+      let dataMaxUrl = encodeURI(this.converterData(dataMax));
+      let paginaUrl = encodeURI(pagina);
+
+      console.log(dataMaxUrl)
+
+      
       let uri = `http://www.transparencia.gov.br/api-de-dados/viagens?dataIdaDe=${dataMinUrl}&dataIdaAte=${dataMaxUrl}&dataRetornoDe=${dataMinUrl}&dataRetornoAte=${dataMaxUrl}&codigoOrgaoSelecionado=${codigoUrl}&pagina=${paginaUrl}`;
       
-      var uri2 = "http://www.transparencia.gov.br/api-de-dados/viagens?" +
-               "dataIdaDe="+dataMinUrl+
-               "&dataIdaAte="+dataMaxUrl+
-               "&dataRetornoDe="+dataMinUrl+
-               "&dataRetornoAte="+dataMaxUrl+
-               "&codigoOrgaoSelecionado="+codigoUrl+
-                "&pagina="+paginaUrl;
       console.log(uri)
       return fetch(uri)
         .then((response) => response.json())
@@ -70,6 +72,13 @@ export default class ViagensScreen extends React.Component {
         this.setState({somaTotalGastos: totalGastos});
       }
   }
+
+  converterData = (data) => {
+    const [year, month, day] = data.split("-")
+    let dataConvertida = `${day}/${month}/${year}`
+    return dataConvertida 
+  }
+
 
   paginaAnterior(){
 

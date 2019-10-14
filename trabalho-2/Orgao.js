@@ -10,12 +10,14 @@ export default class OrgaoScreen extends React.Component {
   constructor(props){
     super(props);
     const { navigation } = this.props;
+    let orgao = props.navigation.getParam('orgao');
     this.state = { 
       isLoading: true,
-      orgao: null,
+      orgao: orgao,
       de: '2019-10-01',
       ate: '2019-10-13',
-      codigo: '01000' }
+      codigo: orgao.codigo 
+      }
   }
   
   componentDidMount(){
@@ -59,6 +61,7 @@ enviaDadosViagem = () => {
           ate: ate,
         })
       console.log('sucesso')
+      console.log(this.state)
       navigate('Viagens', {dataMin: this.state.de, dataMax: this.state.ate, codigo: this.state.codigo})
     }
     else {
