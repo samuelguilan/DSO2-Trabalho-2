@@ -30,7 +30,9 @@ export default class HomeScreen extends React.Component {
     const { navigation } = this.props;
 
     this.focusListener = navigation.addListener('didFocus', () => {
-      this.buscaOrgaos();
+      if(this.state.descricao==null){
+        this.buscaOrgaos();
+        }
      });
   }
 
