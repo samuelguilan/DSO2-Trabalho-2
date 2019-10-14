@@ -55,6 +55,9 @@ export default class ViagensScreen extends React.Component {
       return fetch(uri)
         .then((response) => response.json())
         .then((responseJson) => {
+          if(responseJson.length == 0){
+          alert('Não há viagens disponíveis para exibição')
+        }
           const v = responseJson;
           this.somaTotalGastos(v);
           this.setState({

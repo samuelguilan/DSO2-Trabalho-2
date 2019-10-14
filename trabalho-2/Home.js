@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {
+  Alert,
   Text,
   TextInput,
   TouchableOpacity,
@@ -22,7 +23,7 @@ export default class HomeScreen extends React.Component {
       isLoading: true,
       page: 1,
       orgaos: [],
-      descricao: null
+      descricao: ""
     };
   }
 
@@ -30,9 +31,7 @@ export default class HomeScreen extends React.Component {
     const { navigation } = this.props;
 
     this.focusListener = navigation.addListener('didFocus', () => {
-      if(this.state.descricao==null){
-        this.buscaOrgaos();
-        }
+      this.buscaOrgaos();
      });
   }
 
@@ -52,6 +51,9 @@ export default class HomeScreen extends React.Component {
     fetch(uri)
       .then(response => response.json())
       .then(responseJson => {
+        if(responseJson.length == 0){
+          alert('Não há dados disponíveis para exibição')
+        }
         this.setState({
               isLoading: false,
               orgaos: responseJson,
@@ -121,7 +123,10 @@ export default class HomeScreen extends React.Component {
         <Text> </Text>
         <Text>Insira a descrição do órgão que dejesa consultar: </Text>
         <TextInput
+          style = {styles.textField}
           onChangeText={text => this.setState({ descricao: text })}
+          placeholder="Descrição"
+          bo
           //value={''}
         />
         {this.state.isLoading ? <Text> Carregando... </Text> : <Text>  </Text>}
@@ -170,5 +175,10 @@ const styles = StyleSheet.create({
     padding: 10,
     fontSize: 18,
     height: 44,
+  },
+  textField: { 
+    height: 44, 
+    borderColor: "blue", 
+    borderWidth: 1, 
   },
 });
