@@ -9,21 +9,19 @@ export default class OrgaoScreen extends React.Component {
 
   constructor(props){
     super(props);
-    const { navigation } = this.props;
     let orgao = props.navigation.getParam('orgao');
+    const { navigation } = this.props;
     this.state = { 
-      isLoading: true,
       orgao: orgao,
-      de: '2019-10-01',
-      ate: '2019-10-13',
-      codigo: orgao.codigo 
-      }
+      de: '2019-01-01',
+      ate: '2019-01-30',
+    }
   }
   
   componentDidMount(){
     const { navigation} = this.props;
     this.focusListener = navigation.addListener('didFocus', () => {
-    this.buscaViagens();
+    //this.buscaViagens();
     })
   }
 
@@ -32,19 +30,6 @@ export default class OrgaoScreen extends React.Component {
     this.focusListener.remove();
   } 
 
-  buscaViagens() {
-      return fetch('http://www.transparencia.gov.br/api-de-dados/orgaos-siafi?pagina=1')
-        .then((response) => response.json())
-        .then((responseJson) => {
-          this.setState({
-            isLoading: false,
-          }, function(){
-          });
-        })
-        .catch((error) =>{
-          console.error(error);
-        });
-  }
 
 
 enviaDadosViagem = () => {
@@ -61,8 +46,12 @@ enviaDadosViagem = () => {
           ate: ate,
         })
       console.log('sucesso')
-      console.log(this.state)
-      navigate('Viagens', {dataMin: this.state.de, dataMax: this.state.ate, codigo: this.state.codigo})
+      let informacoes = {
+        dataMin: this.state.de, 
+        dataMax: this.state.ate, 
+        orgao: this.state.orgao
+      }
+      navigate('Viagens', {info: informacoes})
     }
     else {
       console.log('tente novamente')
@@ -119,7 +108,7 @@ toDate = (dateStr) => {
     const {navigate} = this.props.navigation;
     return (
       <View>
-      <Text>Órgão selecionado: </Text>
+      <Text>Órgão selecionado: {this.state.orgao.descricao}</Text>
       <Text> </Text>
       <Text>Insira o período de viagens que deseja consultar: (MÁXIMO DE 1 MÊS)</Text>
       <Text>DE </Text>
@@ -149,7 +138,3 @@ toDate = (dateStr) => {
     );
   }
 }
-const styles = StyleSheet.create({
-  
-  
-})

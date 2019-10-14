@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ActivityIndicator, Text, TextInput, TouchableOpacity, View, StyleSheet, Button, FlatList } from 'react-native';
+import { ActivityIndicator, Text, TextInput, TouchableOpacity, ScrollView, StyleSheet, View, Button, FlatList } from 'react-native';
  
 export default class ViagensScreen extends React.Component {
   static navigationOptions = {
@@ -8,13 +8,13 @@ export default class ViagensScreen extends React.Component {
 
   constructor(props){
     super(props);
-    let infoOrgao = props.navigation.state;
-    console.log(infoOrgao)
+    let infoViagens = props.navigation.getParam('info');
     let paginasSomadas = [];
+    console.log(infoViagens)
     this.state = {
-      codigo:  infoOrgao.params.codigo,
-      dataMin: infoOrgao.params.dataMin,
-      dataMax: infoOrgao.params.dataMax,
+      codigo:  infoViagens.orgao.codigo,
+      dataMin: infoViagens.dataMin,
+      dataMax: infoViagens.dataMax,
       pagina: 1,
       somaTotalGastos: 0,
     };
@@ -23,6 +23,7 @@ export default class ViagensScreen extends React.Component {
   componentDidMount(){
     const { navigation } = this.props;
     this.focusListener = navigation.addListener('didFocus', () => {
+     
      this.buscaViagens()
     });
   }
@@ -32,7 +33,7 @@ export default class ViagensScreen extends React.Component {
     this.focusListener.remove();
   } 
   buscaViagens = () => {
-      let codigo = this.state.codigo;
+     let codigo = this.state.codigo;
       let dataMin = this.converterData(this.state.dataMin);
       let dataMax = this.converterData(this.state.dataMax);
       let pagina = this.state.pagina
@@ -64,6 +65,12 @@ export default class ViagensScreen extends React.Component {
           console.error(error);
         });
 
+
+  }
+  converterData = (data) => {
+    const [year, month, day] = data.split("-")
+    let dataConvertida = `${day}/${month}/${year}`
+    return dataConvertida 
   }
   somaTotalGastos(viagens) {
     if(!this.paginasSomadas.includes(this.state.pagina)){
@@ -73,13 +80,6 @@ export default class ViagensScreen extends React.Component {
         this.setState({somaTotalGastos: totalGastos});
       }
   }
-
-  converterData = (data) => {
-    const [year, month, day] = data.split("-")
-    let dataConvertida = `${day}/${month}/${year}`
-    return dataConvertida 
-  }
-
 
   paginaAnterior(){
 
@@ -113,8 +113,9 @@ export default class ViagensScreen extends React.Component {
     
     const {navigate} = this.props.navigation;
     return (
-      <View>
-      <Text>Total de gastos: this.state.somaTotalGastos</Text>
+      <ScrollView>
+      <Text>Total de gastos: {this.state.somaTotalGastos}</Text>
+      <Text> </Text>
        <FlatList
           data={this.state.viagens}
           renderItem={({ item }) => (
@@ -122,7 +123,7 @@ export default class ViagensScreen extends React.Component {
               onPress={() => navigate('Viagem', { viagem: item })}>
               <View>
                 <Text style={styles.item}>
-                  {item.beneficiario.nome}, {item.dataInicioAfastamento}, {item.dataFimAfastamento}, {item.valorTotalViagem}
+                  {item.pessoa.nome} | {item.dataInicioAfastamento} | {item.dataFimAfastamento} | R$ {item.valorTotalViagem}
                 </Text>
               </View>
             </TouchableOpacity>
@@ -138,19 +139,14 @@ export default class ViagensScreen extends React.Component {
             this.paginaAnterior()
           }}
           />}
-      <Button
-        title="Voltar"
-        onPress={() => navigate('Orgaos')}
-      />
-      
-      </View>
+      </ScrollView>
     );
    }
   }
   const styles = StyleSheet.create({
     item: {
       padding: 10,
-      fontSize: 18,
+      fontSize: 12,
       height: 44,
     },
 });
