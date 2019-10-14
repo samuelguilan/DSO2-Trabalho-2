@@ -13,8 +13,8 @@ export default class OrgaoScreen extends React.Component {
     this.state = { 
       isLoading: true,
       orgao: null,
-      de: null,
-      ate: null,
+      de: '2019-10-01',
+      ate: '2019-10-13',
       codigo: '01000' }
   }
   
@@ -67,13 +67,6 @@ enviaDadosViagem = () => {
 }
 
 
-toDate = (dateStr) => {
-
-    let dataString = dateStr.split("-")
-    let data = new Date(dataString[2], dataString[1]-1, dataString[3])
-    return data.toLocaleDateString("pt-BR")
-    }
-
 handleData = (de, ate) => {
 
     const d1 = new Date(de)
@@ -81,18 +74,10 @@ handleData = (de, ate) => {
     const d2 = new Date(ate)
 
 
-    // const d1 = new Date(de)
-    // // console.log(d1)
-
-    // const d2 = new Date(ate)
-    // console.log(d2)
-    // const d1 = new Date(de.replace(/-/g,'/'))
-    // console.log(d1)
-    // const d2 = new Date(ate.replace(/-/g,'/'))
     let success = false;
 
     var differenceInTime = d2.getTime() - d1.getTime();
-    var differenceInDays = differenceInTime / 1000 * 3600 * 24
+    var differenceInDays = differenceInTime / (1000 * 3600 * 24);
     
     if(differenceInDays < 0) 
     {
@@ -136,7 +121,7 @@ toDate = (dateStr) => {
       <Text>Insira o período de viagens que deseja consultar: (MÁXIMO DE 1 MÊS)</Text>
       <Text>DE </Text>
       <DatePicker 
-          format= "DD-MM-YYYY"
+          format= "YYYY-MM-DD"
           confirmBtnText="Escolher"
           mode="date"
           cancelBtnText="Cancelar"
@@ -145,7 +130,7 @@ toDate = (dateStr) => {
         />
       <Text>ATÉ </Text>
       <DatePicker 
-          format= "DD/MM/YYYY"
+          format= "YYYY-MM-DD"
           confirmBtnText="Escolher"
           cancelBtnText="Cancelar"
           date={this.state.ate}
