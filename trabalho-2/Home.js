@@ -119,7 +119,7 @@ export default class HomeScreen extends React.Component {
     return (
       <ScrollView>
         <Text> </Text>
-        <Text>Insira a descrição do órgão que dejesa consultar</Text>
+        <Text>Insira a descrição do órgão que dejesa consultar: </Text>
         <TextInput
           onChangeText={text => this.setState({ descricao: text })}
           //value={''}

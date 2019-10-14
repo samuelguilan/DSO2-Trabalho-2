@@ -15,7 +15,7 @@ export default class ViagemScreen extends React.Component {
   componentDidMount(){
     const { navigation } = this.props;
     this.focusListener = navigation.addListener('didFocus', () => {
-      console.log(this.state.viagem);
+      console.log("Detalhes de viagem");
     });
   }
 
@@ -33,11 +33,8 @@ export default class ViagemScreen extends React.Component {
       <View>
       <Text>Data de ida: {this.state.viagem.dataInicioAfastamento}</Text>
       <Text>Data de volta: {this.state.viagem.dataFimAfastamento}</Text>
-      <Text> </Text>
       <Text>Nome do servidor: {this.state.viagem.pessoa.nome}</Text>
-      <Text> </Text>
       <Text>Motivo da viagem: {this.state.viagem.dimViagem.motivo}</Text>
-      <Text> </Text>
       <Text>Valores: </Text>
       <Text>        Restituição: {this.state.viagem.valorTotalRestituicao}</Text>
       <Text>        Taxa de agenciamento: {this.state.viagem.valorTotalTaxaAgenciamento}</Text>

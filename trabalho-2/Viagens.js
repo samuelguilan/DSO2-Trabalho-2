@@ -9,7 +9,7 @@ export default class ViagensScreen extends React.Component {
   constructor(props){
     super(props);
     let infoViagens = props.navigation.getParam('info');
-    let paginasSomadas = [];
+    var paginaMaxSomada = 0;
     console.log(infoViagens)
     this.state = {
       codigo:  infoViagens.orgao.codigo,
@@ -17,6 +17,7 @@ export default class ViagensScreen extends React.Component {
       dataMax: infoViagens.dataMax,
       pagina: 1,
       somaTotalGastos: 0,
+      paginaMaxSomada: 0
     };
   }
   
@@ -55,7 +56,7 @@ export default class ViagensScreen extends React.Component {
         .then((response) => response.json())
         .then((responseJson) => {
           const v = responseJson;
-          // this.somaTotalGastos(v);
+          this.somaTotalGastos(v);
           this.setState({
             viagens: v,
           }, function(){
@@ -73,40 +74,35 @@ export default class ViagensScreen extends React.Component {
     return dataConvertida 
   }
   somaTotalGastos(viagens) {
-    if(!this.paginasSomadas.includes(this.state.pagina)){
-        this.paginasSomadas.push(this.state.pagina);
+    console.log("Iniciando soma de gastos")
+    console.log(this.state.pagina)
+    console.log(this.state.paginaMaxSomada)
+    if(this.state.pagina > this.state.paginaMaxSomada){
+      console.log("pagina dendo somada")
+        this.state.paginaMaxSomada++;
         var totalGastos = this.state.somaTotalGastos;
-        viagens.forEach((viagem)=>{totalGastos = totalGastos + this.state.valorTotalViagem;});
+        viagens.forEach((viagem)=>{totalGastos = totalGastos + viagem.valorTotalViagem;});
+        console.log(totalGastos)
         this.setState({somaTotalGastos: totalGastos});
       }
   }
 
-  paginaAnterior(){
-
-    if( this.state.pagina >= 1) {
+  handleNextPage = () => {
     this.setState({
-      page: this.state.pagina - 1
+      pagina: this.state.pagina + 1
     }, () => {
       this.buscaViagens()
     })
-    } else {
-      console.log('erro')
-    }
-
   }
 
-  proximaPagina(){
-
-    if( this.state.pagina >= 1) {
-    this.setState({
-      page: this.state.pagina + 1
+  handlePreviousPage = () => {
+    if(this.state.pagina >= 1){
+      this.setState({
+      pagina: this.state.pagina - 1
     }, () => {
       this.buscaViagens()
     })
-    } else {
-      console.log('erro')
     }
-
   }
 
   render() {
@@ -114,7 +110,7 @@ export default class ViagensScreen extends React.Component {
     const {navigate} = this.props.navigation;
     return (
       <ScrollView>
-      <Text>Total de gastos: {this.state.somaTotalGastos}</Text>
+      <Text>Total de gastos: {this.state.somaTotalGastos} reais</Text>
       <Text> </Text>
        <FlatList
           data={this.state.viagens}
@@ -131,12 +127,12 @@ export default class ViagensScreen extends React.Component {
         />
       <Button
         title="Próxima página"
-        onPress={() => this.proximaPagina}
+        onPress={() => this.handleNextPage()}
       />
-      {this.state.pagina === 1 && this.state.isLoading === false ? <Text></Text> : <Button 
+      {this.state.pagina === 1  ? <Text></Text> : <Button 
           title="Página Anterior"
           onPress={() => {
-            this.paginaAnterior()
+            this.handlePreviousPage()
           }}
           />}
       </ScrollView>
