@@ -33,27 +33,28 @@ export default class ViagensScreen extends React.Component {
   } 
   buscaViagens = () => {
       let codigo = this.state.codigo;
-      let dataMin = this.state.dataMin;
-      let dataMax = this.state.dataMax;
+      let dataMin = this.converterData(this.state.dataMin);
+      let dataMax = this.converterData(this.state.dataMax);
       let pagina = this.state.pagina
 
 
       let codigoUrl = encodeURI(codigo);
-      let dataMinUrl = encodeURI(this.converterData(dataMin));
-      let dataMaxUrl = encodeURI(this.converterData(dataMax));
-      let paginaUrl = encodeURI(pagina);
+      let dataMinUrl = encodeURIComponent(dataMin);
+      console.log(dataMinUrl)
+      let dataMaxUrl = encodeURIComponent(dataMax);
+      let paginaUrl = encodeURIComponent(pagina);
 
       console.log(dataMaxUrl)
 
       
-      let uri = `http://www.transparencia.gov.br/api-de-dados/viagens?dataIdaDe=${dataMinUrl}&dataIdaAte=${dataMaxUrl}&dataRetornoDe=${dataMinUrl}&dataRetornoAte=${dataMaxUrl}&codigoOrgaoSelecionado=${codigoUrl}&pagina=${paginaUrl}`;
+      let uri = `http://www.transparencia.gov.br/api-de-dados/viagens?dataIdaDe=${dataMinUrl}&dataIdaAte=${dataMaxUrl}&dataRetornoDe=${dataMinUrl}&dataRetornoAte=${dataMaxUrl}&codigoOrgao=${codigoUrl}&pagina=${paginaUrl}`;
       
       console.log(uri)
       return fetch(uri)
         .then((response) => response.json())
         .then((responseJson) => {
           const v = responseJson;
-          this.somaTotalGastos(v);
+          // this.somaTotalGastos(v);
           this.setState({
             viagens: v,
           }, function(){
