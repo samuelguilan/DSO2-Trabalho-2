@@ -33,11 +33,11 @@ export default class ViagensScreen extends React.Component {
   } 
   buscaViagens = () => {
     console.log(this.state.dataMin)
-      var codigoUrl = this.state.codigo;
-      var dataMinUrl = this.state.dataMin;
-      var dataMaxUrl = this.state.dataMax;
-      var paginaUrl = this.state.pagina;
-      var uri = `http://www.transparencia.gov.br/api-de-dados/viagens?dataIdaDe=${dataMinUrl}&dataIdaAte=${dataMaxUrl}&dataRetornoDe=${dataMinUrl}&dataRetornoAte=${dataMaxUrl}&codigoOrgaoSelecionado=${codigoUrl}&pagina=${paginaUrl}`;
+      let codigoUrl = this.state.codigo;
+      let dataMinUrl = this.state.dataMin;
+      let dataMaxUrl = this.state.dataMax;
+      let paginaUrl = this.state.pagina;
+      let uri = `http://www.transparencia.gov.br/api-de-dados/viagens?dataIdaDe=${dataMinUrl}&dataIdaAte=${dataMaxUrl}&dataRetornoDe=${dataMinUrl}&dataRetornoAte=${dataMaxUrl}&codigoOrgaoSelecionado=${codigoUrl}&pagina=${paginaUrl}`;
       
       var uri2 = "http://www.transparencia.gov.br/api-de-dados/viagens?" +
                "dataIdaDe="+dataMinUrl+

@@ -66,13 +66,32 @@ enviaDadosViagem = () => {
     }
 }
 
+
+toDate = (dateStr) => {
+
+    let dataString = dateStr.split("-")
+    let data = new Date(dataString[2], dataString[1]-1, dataString[3])
+    return data.toLocaleDateString("pt-BR")
+    }
+
 handleData = (de, ate) => {
 
     const d1 = new Date(de)
+    console.log(d1)
     const d2 = new Date(ate)
+
+
+    // const d1 = new Date(de)
+    // // console.log(d1)
+
+    // const d2 = new Date(ate)
+    // console.log(d2)
+    // const d1 = new Date(de.replace(/-/g,'/'))
+    // console.log(d1)
+    // const d2 = new Date(ate.replace(/-/g,'/'))
     let success = false;
 
-    var differenceInTime = ate.getTime() - de.getTime();
+    var differenceInTime = d2.getTime() - d1.getTime();
     var differenceInDays = differenceInTime / 1000 * 3600 * 24
     
     if(differenceInDays < 0) 
@@ -95,24 +114,13 @@ handleData = (de, ate) => {
       success = false;
       alert('Erro! Tente novamente!')
     }
-    
+  
     return success
+}
 
-    // if(d1.getMonth() - d2.getMonth() === 0)
-    //   this.setState({
-    //     de: de,
-    //     ate: ate
-    //   })
-
-
-    // if(d1 > d2)
-    //   alert('Erro! Data de inicio não pode ser maior do que a data fim')
-    
-      // if(d1.getMonth() - d2.getMonth() === 1)
-      //   if(d1.getDay() > d2.getDay())
-      //     alert('Erro! Intervalo precisa ser de até um mês')
-    
-    // if(d1.getMonth === 11 && d2.getMonth === 0)
+toDate = (dateStr) => {
+  const [day, month, year] = dateStr.split("-")
+  return new Date(year, month -1, day)
 }
 
 
@@ -137,7 +145,7 @@ handleData = (de, ate) => {
         />
       <Text>ATÉ </Text>
       <DatePicker 
-          format= "DD-MM-YYYY"
+          format= "DD/MM/YYYY"
           confirmBtnText="Escolher"
           cancelBtnText="Cancelar"
           date={this.state.ate}
